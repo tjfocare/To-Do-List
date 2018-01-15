@@ -7,16 +7,19 @@
 //
 
 import UIKit
+import CoreData
 
 class ToDoViewController: UITableViewController {
 
     var itemArray = [Item]()
     
-    let dataFilePath = FileManager.default.urls(for: .documentDirectory, in: .userDomainMask).first?.appendingPathComponent("Items.plist")
+    let context = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
+        print(FileManager.default.urls(for: .documentDirectory, in: .userDomainMask))
         loadItems()
     }
 
@@ -45,34 +48,6 @@ class ToDoViewController: UITableViewController {
         
         tableView.deselectRow(at: indexPath, animated: true)
     }
-
-    fileprivate func saveItems() {
-        let encoder = PropertyListEncoder()
-        
-        do {
-            let data = try encoder.encode(self.itemArray)
-            try data.write(to: self.dataFilePath!)
-        } catch {
-            print(error)
-        }
-        
-        self.tableView.reloadData()
-    }
-    
-    func loadItems() {
-        
-        if let data = try? Data(contentsOf: dataFilePath!) {
-            
-            let decoder = PropertyListDecoder()
-            do {
-                itemArray = try decoder.decode([Item].self, from : data)
-            } catch {
-                print("error decoding")
-            }
-        }
-        
-    }
-    
     
     @IBAction func addButtonPressed(_ sender: Any) {
         
@@ -82,9 +57,11 @@ class ToDoViewController: UITableViewController {
         
         let action = UIAlertAction(title: "Add item", style: .default) { (action) in
             
-            let item = Item()
-            item.title = textField.text!
-            self.itemArray.append(item)
+            let newItem = Item(context : self.context)
+            
+            newItem.title = textField.text!
+            newItem.done = false
+            self.itemArray.append(newItem)
             
             self.saveItems()
         }
@@ -97,5 +74,30 @@ class ToDoViewController: UITableViewController {
         
         present(alert, animated: true, completion: nil)
     }
+    
+    
+    func saveItems() {
+        
+        do {
+            try context.save()
+        } catch {
+            print("Error saving context: \(error)")
+        }
+        
+        self.tableView.reloadData()
+    }
+    
+    func loadItems() {
+
+        let request : NSFetchRequest<Item> = Item.fetchRequest()
+        
+        do {
+            itemArray = try context.fetch(request)
+        } catch {
+            print("error fetching context: \(error)")
+        }
+
+    }
+    
 }
 
