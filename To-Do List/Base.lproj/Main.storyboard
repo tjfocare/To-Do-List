@@ -9,7 +9,7 @@
         <capability name="documents saved in the Xcode 8 format" minToolsVersion="8.0"/>
     </dependencies>
     <scenes>
-        <!--ToDoList-->
+        <!--Items-->
         <scene sceneID="1Er-Ws-oqW">
             <objects>
                 <tableViewController id="fg7-3b-uRB" customClass="ToDoViewController" customModule="To_Do_List" customModuleProvider="target" sceneMemberID="viewController">
@@ -26,7 +26,7 @@
                             </connections>
                         </searchBar>
                         <prototypes>
-                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="ToDoItemCell" id="Xgb-zJ-QcP">
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="toDoItemCell" id="Xgb-zJ-QcP">
                                 <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Xgb-zJ-QcP" id="qoo-kZ-10d">
@@ -40,7 +40,8 @@
                             <outlet property="delegate" destination="fg7-3b-uRB" id="qSZ-zl-Uzj"/>
                         </connections>
                     </tableView>
-                    <navigationItem key="navigationItem" title="ToDoList" id="t5A-Sk-Tpp">
+                    <navigationItem key="navigationItem" title="Items" id="t5A-Sk-Tpp">
+                        <barButtonItem key="backBarButtonItem" title="Categories" id="Hns-AB-51N"/>
                         <barButtonItem key="rightBarButtonItem" systemItem="add" id="26b-GG-yQO">
                             <connections>
                                 <action selector="addButtonPressed:" destination="fg7-3b-uRB" id="93s-Fu-8Pc"/>
@@ -50,7 +51,45 @@
                 </tableViewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4DN-Rc-XXb" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="1092" y="133.5832083958021"/>
+            <point key="canvasLocation" x="2028" y="133"/>
+        </scene>
+        <!--To Do List-->
+        <scene sceneID="jVp-5h-VvI">
+            <objects>
+                <tableViewController id="aDm-Hq-GZ1" customClass="CategoryViewControllerTableViewController" customModule="To_Do_List" customModuleProvider="target" sceneMemberID="viewController">
+                    <tableView key="view" clipsSubviews="YES" contentMode="scaleToFill" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="-1" estimatedRowHeight="-1" sectionHeaderHeight="28" sectionFooterHeight="28" id="T3X-kp-hfv">
+                        <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
+                        <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <prototypes>
+                            <tableViewCell clipsSubviews="YES" contentMode="scaleToFill" preservesSuperviewLayoutMargins="YES" selectionStyle="default" indentationWidth="10" reuseIdentifier="categoryCell" id="Ikx-en-0Te">
+                                <rect key="frame" x="0.0" y="28" width="375" height="44"/>
+                                <autoresizingMask key="autoresizingMask"/>
+                                <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" preservesSuperviewLayoutMargins="YES" insetsLayoutMarginsFromSafeArea="NO" tableViewCell="Ikx-en-0Te" id="5OE-qF-Krq">
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
+                                    <autoresizingMask key="autoresizingMask"/>
+                                </tableViewCellContentView>
+                            </tableViewCell>
+                        </prototypes>
+                        <connections>
+                            <outlet property="dataSource" destination="aDm-Hq-GZ1" id="NXl-HU-z7F"/>
+                            <outlet property="delegate" destination="aDm-Hq-GZ1" id="aLE-mA-HZj"/>
+                        </connections>
+                    </tableView>
+                    <navigationItem key="navigationItem" title="To Do List" id="g7d-rA-Sai">
+                        <barButtonItem key="rightBarButtonItem" title="Item" id="7yY-QX-Gvc">
+                            <connections>
+                                <action selector="addButtonPressed:" destination="aDm-Hq-GZ1" id="htq-yA-HwW"/>
+                            </connections>
+                        </barButtonItem>
+                    </navigationItem>
+                    <connections>
+                        <segue destination="fg7-3b-uRB" kind="show" identifier="goToItems" id="acE-Y5-hzl"/>
+                    </connections>
+                </tableViewController>
+                <placeholder placeholderIdentifier="IBFirstResponder" id="b2P-rx-hHc" userLabel="First Responder" sceneMemberID="firstResponder"/>
+            </objects>
+            <point key="canvasLocation" x="1386" y="133"/>
         </scene>
         <!--Navigation Controller-->
         <scene sceneID="XBo-k9-GVm">
@@ -68,7 +107,7 @@
                     </navigationBar>
                     <nil name="viewControllers"/>
                     <connections>
-                        <segue destination="fg7-3b-uRB" kind="relationship" relationship="rootViewController" id="0dv-RP-7xL"/>
+                        <segue destination="aDm-Hq-GZ1" kind="relationship" relationship="rootViewController" id="HjJ-Ga-5YH"/>
                     </connections>
                 </navigationController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="oRa-ai-IER" userLabel="First Responder" sceneMemberID="firstResponder"/>
