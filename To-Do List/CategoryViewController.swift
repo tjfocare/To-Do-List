@@ -9,7 +9,7 @@
 import UIKit
 import RealmSwift
 
-class CategoryViewControllerTableViewController: UITableViewController {
+class CategoryViewController: SwipeTableViewController {
     
     let realm = try! Realm()    // can only fail on first declaration
     
@@ -17,7 +17,7 @@ class CategoryViewControllerTableViewController: UITableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        tableView.rowHeight = 80.0
         loadCategories()
     }
     
@@ -39,13 +39,12 @@ class CategoryViewControllerTableViewController: UITableViewController {
     
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-        let cell = tableView.dequeueReusableCell(withIdentifier: "categoryCell", for: indexPath)
+        let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         cell.textLabel?.text = categories?[indexPath.row].name ?? "No categories added yet!"
         
         return cell
     }
-    
     
     @IBAction func addButtonPressed(_ sender: Any) {
         
@@ -61,11 +60,12 @@ class CategoryViewControllerTableViewController: UITableViewController {
             self.saveCategories(category: newCategory)
         }
         
+        alert.addAction(action)
+        
         alert.addTextField { (alertTextField) in
             alertTextField.placeholder = "Create new category"
             textField = alertTextField
         }
-        alert.addAction(action)
         
         present(alert, animated: true, completion: nil)
         
@@ -90,5 +90,19 @@ class CategoryViewControllerTableViewController: UITableViewController {
         
         self.tableView.reloadData()
     }
+    
+    override func updateModel(at indexPath: IndexPath) {
+        if let categoryForDeletion = self.categories?[indexPath.row] {
+            do {
+                try self.realm.write {
+                    self.realm.delete(categoryForDeletion)
+                }
+        
+            } catch {
+                print("Error deleting category: \(error)")
+            }
+        }
+    }
 
 }
+
