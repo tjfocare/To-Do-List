@@ -8,6 +8,7 @@
 
 import UIKit
 import RealmSwift
+import ChameleonFramework
 
 class ToDoViewController: SwipeTableViewController {
 
@@ -23,16 +24,22 @@ class ToDoViewController: SwipeTableViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        tableView.separatorStyle = .none
     }
 
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
-//        let cell = tableView.dequeueReusableCell(withIdentifier: "toDoItemCell", for: indexPath)
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
         
         if let item = toDoItems?[indexPath.row] {
         
             cell.textLabel?.text = item.title
+            
+            if let colour = HexColor((self.selectedCategory?.cellColour)!)?.darken(byPercentage: CGFloat(indexPath.row)/CGFloat(toDoItems!.count)) {
+                        
+                cell.backgroundColor = colour
+                cell.textLabel?.textColor = ContrastColorOf(colour, returnFlat: true)
+            }
             
             cell.accessoryType = (item.done) ? .checkmark : .none
         } else {
@@ -106,7 +113,7 @@ class ToDoViewController: SwipeTableViewController {
     }
     
     override func updateModel(at indexPath: IndexPath) {
-        
+
         if let itemForDeletion = self.toDoItems?[indexPath.row] {
             do {
                 try self.realm.write {
