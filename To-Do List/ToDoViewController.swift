@@ -16,6 +16,8 @@ class ToDoViewController: SwipeTableViewController {
     
     let realm = try! Realm()
     
+    @IBOutlet weak var searchBar: UISearchBar!
+    
     var selectedCategory : Category? { // nil until set
         didSet {
             loadItems() // calls when value is given
@@ -26,7 +28,32 @@ class ToDoViewController: SwipeTableViewController {
         super.viewDidLoad()
         tableView.separatorStyle = .none
     }
+    
+    override func viewWillAppear(_ animated: Bool) {
+        
+        guard let hexColour = selectedCategory?.cellColour else { fatalError() }
+            
+        title = selectedCategory?.name
+        
+        updateNavBar(withHexCode: hexColour)
+        
+    }
+    
+    override func viewWillDisappear(_ animated: Bool) {
+        updateNavBar(withHexCode: "1D9BF6")
+    }
 
+    func updateNavBar(withHexCode colourHexCode : String) {
+        guard let navBar = navigationController?.navigationBar
+            else { fatalError("Navigtion bar does not yet exist") }
+        
+        guard let navBarColour = HexColor(colourHexCode) else { fatalError() }
+        navBar.barTintColor = navBarColour
+        navBar.tintColor = ContrastColorOf(navBarColour, returnFlat: true)
+        navBar.largeTitleTextAttributes = [NSAttributedStringKey.foregroundColor : ContrastColorOf(navBarColour, returnFlat: true)]
+        searchBar.tintColor = navBarColour
+    }
+    
     override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
         
         let cell = super.tableView(tableView, cellForRowAt: indexPath)
